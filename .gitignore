@@ -1,0 +1,7 @@
+#/Notable.Web/bin/
+#/Notable.Web/obj/
+#/Notable.Console/bin/
+#/Notable.Console/obj/
+/**/bin/
+/**/obj/
+/**/.idea/
