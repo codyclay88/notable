@@ -1,0 +1,37 @@
+<div class="container">
+  <form [formGroup]="form">
+    <mat-form-field appearance="outline">
+      <mat-label>Frets</mat-label>
+      <input matInput formControlName="fretCount" [min]="12" [max]="25"  type="number">
+    </mat-form-field>
+  </form>
+</div>
+
+<div class="fretboard">
+  <div>
+    <table>
+      <thead>
+      <tr>
+        <th *ngFor="let fret of frets; let first = first">
+          <span *ngIf="!first">{{ fret }}</span>
+        </th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let str of maskedStrings">
+        <td *ngFor="let note of str; let first = first; let i=index" class="fret">
+          <span [ngStyle]="{ 'font-weight': first ? 'bold' : 'inherit' }"
+                [ngClass]="note.mask ? ['in-scale'] : '[]'">
+            {{ note.note.note }}
+            <ng-container *ngIf="showScaleDegrees === 'Yes'">
+              <span *ngIf="!!note.note.interval">({{note.note.interval}})</span>
+            </ng-container>
+          </span>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
