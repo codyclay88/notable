@@ -3,7 +3,8 @@
 }
 
 .fretboard {
-  padding: 1rem;
+  padding: 0 1rem 1rem;
+  overflow-x: scroll;
 }
 
 .fret-number {

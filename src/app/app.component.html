@@ -2,41 +2,60 @@
   <span>Notable</span>
 </mat-toolbar>
 
-<div class="body">
-  <form [formGroup]="form">
-    <mat-form-field appearance="outline">
-      <mat-label>Key</mat-label>
-      <mat-select formControlName="key" required>
-        <mat-option [value]="note" *ngFor="let note of allNotes"> {{ note }}</mat-option>
-      </mat-select>
-    </mat-form-field>
+<mat-drawer-container [hasBackdrop]="false">
+  <mat-drawer #drawer [mode]="'side'">
+    <form [formGroup]="form" style="padding: 1rem 8px 8px;">
+      <div>
+        <mat-form-field appearance="outline">
+          <mat-label>Key</mat-label>
+          <mat-select formControlName="key" required>
+            <mat-option [value]="'NA'"> None </mat-option>
+            <mat-option [value]="note" *ngFor="let note of allNotes"> {{ note }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Mode</mat-label>
-      <mat-select formControlName="mode" required>
-        <mat-option [value]="mode" *ngFor="let mode of allModes"> {{ mode }}</mat-option>
-      </mat-select>
-    </mat-form-field>
+      <ng-container *ngIf="form.get('key')?.value !== 'NA'">
+        <div>
+          <mat-form-field appearance="outline">
+            <mat-label>Mode</mat-label>
+            <mat-select formControlName="mode" required>
+              <mat-option [value]="mode" *ngFor="let mode of allModes"> {{ mode }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field appearance="outline">
+            <mat-label>Show Scale Degree?</mat-label>
+            <mat-select formControlName="showScaleDegree" required>
+              <mat-option [value]="'Yes'">Sure</mat-option>
+              <mat-option [value]="'No'">Nah</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </ng-container>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Show Scale Degree?</mat-label>
-      <mat-select formControlName="showScaleDegree" required>
-        <mat-option [value]="'Yes'">Sure</mat-option>
-        <mat-option [value]="'No'">Nah</mat-option>
-      </mat-select>
-    </mat-form-field>
-  </form>
-</div>
+    </form>
+  </mat-drawer>
+  <mat-drawer-content>
+    <div class="body">
+      <button mat-mini-fab color="primary" aria-label="Example icon button with a menu icon" (click)="drawer.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+    </div>
 
-<div *ngFor="let instrument of instruments; let i=index">
-  <app-instrument  [instrument]="instrument"
-                   [key]="this.form.get('key')?.value || 'C'"
-                   [mode]="this.form.get('mode')?.value || 'Ionian'"
-                   [showScaleDegrees]="this.form.get('showScaleDegree')?.value === 'Yes' ? 'Yes' : 'No'"
-  ></app-instrument>
-</div>
 
-{{ this.form.value | json }}
+    <div *ngFor="let instrument of instruments; let i=index">
+      <app-instrument  [instrument]="instrument"
+                       [key]="this.form.get('key')?.value || 'C'"
+                       [mode]="this.form.get('mode')?.value || 'Ionian'"
+                       [showScaleDegrees]="this.form.get('showScaleDegree')?.value === 'Yes' ? 'Yes' : 'No'"
+      ></app-instrument>
+    </div>
+  </mat-drawer-content>
+</mat-drawer-container>
+
+
 
 
 

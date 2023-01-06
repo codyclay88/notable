@@ -39,7 +39,7 @@ export class AppComponent implements OnInit{
 }
 
 interface SelectionFormGroup {
-  key: FormControl<Note>;
+  key: FormControl<Note | "NA">;
   mode: FormControl<Mode>;
   showScaleDegree: FormControl<'Yes' | 'No'>;
 }

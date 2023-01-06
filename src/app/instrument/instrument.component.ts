@@ -19,11 +19,10 @@ import {startWith} from "rxjs";
 export class InstrumentComponent implements OnInit, OnChanges {
   // @ts-ignore
   @Input() instrument: Instrument;
-  @Input() key: Note = "C";
+  @Input() key: Note | "NA" = "NA";
   @Input() mode: Mode = "Ionian";
   @Input() showScaleDegrees: "Yes" | "No" = "Yes";
 
-  numberFretOptions: number[] = [...Array(25).keys()];
   frets: number[] = [];
 
   // @ts-ignore
@@ -62,7 +61,10 @@ export class InstrumentComponent implements OnInit, OnChanges {
     this.frets = this.createFrets(this.instrument.fretCount);
   }
 
-  applyModeToTuning(instrument: Instrument, key: Note, mode: Mode) {
+  applyModeToTuning(instrument: Instrument, key: Note | "NA", mode: Mode) {
+    if(key === "NA")
+      return [...instrument.tuning.map(str => applyModeMask(getNotesInString(str, instrument.fretCount), []))];
+
     return [...instrument.tuning.map(str => applyModeMask(getNotesInString(str, instrument.fretCount), getScaleDegreesForMode(key, mode)))];
   }
 
