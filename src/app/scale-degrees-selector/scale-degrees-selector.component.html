@@ -1,0 +1,3 @@
+<mat-chip-listbox [multiple]="true">
+  <mat-chip-option *ngFor="let scaleDegree of scaleDegrees; let i=index" [selected]="checkboxes[i]" (selectionChange)="scaleDegreeChanged(i, $event)">{{(scaleDegree.interval)}} {{ scaleDegree.pitchClass }}</mat-chip-option>
+</mat-chip-listbox>

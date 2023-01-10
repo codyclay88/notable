@@ -1,0 +1,22 @@
+<div class="fretboard">
+  <table>
+    <thead>
+    <tr>
+      <th *ngFor="let fret of frets; let first = first">
+        <span *ngIf="!first">{{ fret }}</span>
+      </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let str of maskedStrings">
+      <td *ngFor="let note of str; let first = first; let i=index" class="fret" (click)="playTone(note)">
+        <span [ngStyle]="{ 'font-weight': first ? 'bold' : 'inherit' }"
+              [ngClass]="note.highlighted ? ['highlighted'] : '[]'">
+          {{ note.scaleDegree.pitchClass }}<sup>{{ note.octave }}</sup>
+          <span *ngIf="!!note.scaleDegree.interval && note.highlighted">({{note.scaleDegree.interval}})</span>
+        </span>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>

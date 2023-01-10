@@ -1,73 +1,87 @@
-export type Note = "A"| "A#" | "B" | "C" | "C#" | "D" | "D#" | "E" | "F" | "F#" | "G" | "G#";
+export type PitchClass = "A"| "A#" | "B" | "C" | "C#" | "D" | "D#" | "E" | "F" | "F#" | "G" | "G#";
 
-export const notes: Note[] = [
+export const pitchClasses: PitchClass[] = [
   "A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#",
 ];
 
-export const createEmptyInstrument = (): Instrument => {
-  return createInstrument(
-    [],
-    0
-  );
+const a0: MusicNote = {
+  pitchClass: 'A', octave: 0, frequency: 27.500
+};
+
+const nextPitchClass = (note: PitchClass): PitchClass => {
+  const currentNoteIndex = pitchClasses.indexOf(note);
+  if(currentNoteIndex + 1 >= pitchClasses.length)
+    return pitchClasses[0];
+  return pitchClasses[currentNoteIndex + 1];
 }
 
-export const createGuitar = (): Instrument => {
-  return createInstrument(
-    ['E', 'B', 'G', 'D', 'A', 'E'],
-    18
-  );
-}
-
-export const createBass = (): Instrument => {
-  return createInstrument(
-    ['G', 'D', 'A', 'E'],
-    18
-  );
-}
-
-export const createInstrument = (tuning: Note[], fretCount: number): Instrument => {
+export const nextNote = (currentNote: MusicNote): MusicNote => {
+  const nextFrequency = currentNote.frequency * 1.059463;
+  const nextPitch = nextPitchClass(currentNote.pitchClass);
+  const nextOctave = nextPitch === 'C' ? currentNote.octave + 1 : currentNote.octave;
   return {
-    tuning,
-    fretCount
+    pitchClass: nextPitch,
+    octave: nextOctave,
+    frequency: nextFrequency,
   };
+};
+
+const createNotes = (firstNote: MusicNote, numberOfNotes: number) => {
+  const notes = [firstNote];
+  let currentNote = firstNote;
+  for (let i of [...Array(numberOfNotes - 1).keys()]) {
+    currentNote = nextNote(currentNote);
+    notes.push(currentNote);
+  }
+
+  return notes;
+};
+
+export const noteCatalog: MusicNote[] = createNotes(a0, 88);
+
+export const findNote = (pitchClass: PitchClass, octave: number): MusicNote => {
+  return noteCatalog.find(n => n.pitchClass === pitchClass && n.octave === octave)
+    || a0;
 }
 
+export interface MusicNote {
+  pitchClass: PitchClass;
+  octave: number;
+  frequency: number;
+}
 
 export interface Instrument {
   fretCount: number;
-  tuning: Note[];
+  tuning: MusicNote[];
 }
 
-export const halfStep = (note: Note): Note => {
-  const currentNoteIndex = notes.indexOf(note);
-  if(currentNoteIndex + 1 >= notes.length)
-    return notes[0];
-  return notes[currentNoteIndex + 1];
+export const halfStep = (pitchClass: PitchClass): PitchClass => {
+  return nextPitchClass(pitchClass);
 }
 
-export const wholeStep = (note: Note): Note => {
-  const next = halfStep(note)
+export const wholeStep = (pitchClass: PitchClass): PitchClass => {
+  const next = halfStep(pitchClass)
   return halfStep(next);
 }
 
-export const createScaleDegrees = (note: Note, formula: ScaleFormula) => {
+export const createScaleDegrees = (pitchClass: PitchClass, formula: ScaleFormula) => {
   const notes: ScaleDegree[] = [];
-  let currentNote = note;
-  notes.push({ note: currentNote, interval: 1 });
+  let currentPitchClass = pitchClass;
+  notes.push({ pitchClass: currentPitchClass, interval: 1 });
   for(let i = 0; i < formula.length; i++)
   {
-    currentNote = formula[i](currentNote);
-    notes.push({ note: currentNote, interval: i + 2 });
+    currentPitchClass = formula[i](currentPitchClass);
+    notes.push({ pitchClass: currentPitchClass, interval: i + 2 });
   }
   return notes;
 }
 
-export type IntervalFunction = (note: Note) => Note;
+export type IntervalFunction = (pitchClass: PitchClass) => PitchClass;
 export type ScaleFormula = IntervalFunction[];
 
-export const getScaleDegreesForMode = (note: Note, mode: Mode) => {
+export const getScaleDegreesForMode = (key: PitchClass, mode: Mode) => {
   const modeFormula = getFormulaForMode(mode);
-  return createScaleDegrees(note, modeFormula);
+  return createScaleDegrees(key, modeFormula);
 }
 
 export type Mode = "Ionian" | "Dorian" | "Phrygian" | "Lydian" | "Mixolydian" | "Aeolian" | "Locrian";
@@ -93,34 +107,34 @@ export const mixolydianModeFormula: ScaleFormula = [wholeStep, wholeStep, halfSt
 export const aeolianModeFormula: ScaleFormula = [wholeStep, halfStep, wholeStep, wholeStep, halfStep, wholeStep];
 export const locrianModeFormula: ScaleFormula = [halfStep, wholeStep, wholeStep, halfStep, wholeStep, wholeStep];
 
-export const getNotesInString = (startingNote: Note, fretCount: number) => {
-  let notes: Note[] = [];
-  let currentNote = startingNote
-  notes.push(currentNote);
-  for(let i = 0; i < fretCount; i++) {
-    currentNote = halfStep(currentNote);
-    notes.push(currentNote)
-  }
-  return notes;
+export const getNotesForString = (startingNote: MusicNote, fretCount: number): MusicNote[] => {
+  const startingNoteIndex = noteCatalog.findIndex(n => n.pitchClass === startingNote.pitchClass && n.octave === startingNote.octave);
+
+  if(!startingNoteIndex)
+    return [];
+
+  return [...noteCatalog.slice(startingNoteIndex, fretCount + startingNoteIndex + 1)];
 }
 
-export const applyModeMask = (notes: Note[], scaleNotes: ScaleDegree[]): RenderedNote[] => {
+export const maskNotes = (notes: MusicNote[], scaleNotes: { scaleDegree: ScaleDegree; selected: boolean }[]): RenderedNote[] => {
   return notes.map(note => {
-    const scaleNote = scaleNotes.find(n => n.note === note);
+    const scaleNote = scaleNotes.find(n => n.scaleDegree.pitchClass === note.pitchClass);
     if(!!scaleNote)
-      return { note: scaleNote, mask: true,  };
-    else return { note: { note, interval: 0}, mask: false };
+      return { scaleDegree: scaleNote.scaleDegree, highlighted: scaleNote.selected, octave: note.octave, frequency: note.frequency };
+    else return { scaleDegree: { pitchClass: note.pitchClass, interval: 0}, highlighted: false, octave: note.octave, frequency: note.frequency };
   });
 }
 
 export interface ScaleDegree {
-  note: Note;
+  pitchClass: PitchClass;
   interval: number;
 }
 
 export interface RenderedNote {
-  note: ScaleDegree,
-  mask: boolean;
+  scaleDegree: ScaleDegree;
+  octave: number;
+  frequency: number;
+  highlighted: boolean;
 }
 
 

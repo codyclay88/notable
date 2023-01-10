@@ -1,12 +1,11 @@
 import {Component, Input, OnChanges, OnInit} from '@angular/core';
 import {
-  applyModeMask,
-  getNotesInString,
-  getScaleDegreesForMode,
+  maskNotes,
+  getNotesForString,
   Instrument,
   Mode,
-  Note,
-  RenderedNote
+  PitchClass,
+  RenderedNote, ScaleDegree, MusicNote
 } from "../music-stuff";
 import {FormArray, FormControl, FormGroup} from "@angular/forms";
 import {startWith} from "rxjs";
@@ -19,9 +18,9 @@ import {startWith} from "rxjs";
 export class InstrumentComponent implements OnInit, OnChanges {
   // @ts-ignore
   @Input() instrument: Instrument;
-  @Input() key: Note | "NA" = "NA";
+  @Input() key: PitchClass | "NA" = "NA";
   @Input() mode: Mode = "Ionian";
-  @Input() showScaleDegrees: "Yes" | "No" = "Yes";
+  @Input() scaleDegrees: { scaleDegree: ScaleDegree; selected: boolean }[] = [];
 
   frets: number[] = [];
 
@@ -44,7 +43,7 @@ export class InstrumentComponent implements OnInit, OnChanges {
           fretCount: fretCount,
           tuning: this.instrument.tuning,
         };
-        this.refreshMask();
+        this.recalculate();
       });
 
     this.form.patchValue({
@@ -53,19 +52,22 @@ export class InstrumentComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(): void {
-    this.refreshMask();
+    this.recalculate();
   }
 
-  refreshMask() {
-    this.maskedStrings = this.applyModeToTuning(this.instrument, this.key, this.mode);
+  recalculate() {
+    console.log("recalculating")
+    this.maskedStrings = this.applyModeToTuning(this.instrument, this.key);
     this.frets = this.createFrets(this.instrument.fretCount);
   }
 
-  applyModeToTuning(instrument: Instrument, key: Note | "NA", mode: Mode) {
-    if(key === "NA")
-      return [...instrument.tuning.map(str => applyModeMask(getNotesInString(str, instrument.fretCount), []))];
+  applyModeToTuning(instrument: Instrument, key: PitchClass | "NA") {
+    const notesOnString = (openNote: MusicNote) => getNotesForString(openNote, instrument.fretCount);
 
-    return [...instrument.tuning.map(str => applyModeMask(getNotesInString(str, instrument.fretCount), getScaleDegreesForMode(key, mode)))];
+    if(key === "NA")
+      return [...instrument.tuning.map(str => maskNotes(notesOnString(str), []))];
+
+    return [...instrument.tuning.map(str => maskNotes(notesOnString(str), this.scaleDegrees))];
   }
 
   createFrets(fretCount: number) {
@@ -75,5 +77,5 @@ export class InstrumentComponent implements OnInit, OnChanges {
 
 interface SelectionFormGroup {
   fretCount: FormControl<number>;
-  tuning: FormArray<FormControl<Note>>;
+  tuning: FormArray<FormControl<PitchClass>>;
 }

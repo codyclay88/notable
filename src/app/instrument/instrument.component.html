@@ -1,27 +1,4 @@
-<div class="fretboard">
-  <table>
-    <thead>
-    <tr>
-      <th *ngFor="let fret of frets; let first = first">
-        <span *ngIf="!first">{{ fret }}</span>
-      </th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let str of maskedStrings">
-      <td *ngFor="let note of str; let first = first; let i=index" class="fret">
-        <span [ngStyle]="{ 'font-weight': first ? 'bold' : 'inherit' }"
-              [ngClass]="note.mask ? ['in-scale'] : '[]'">
-          {{ note.note.note }}
-          <ng-container *ngIf="showScaleDegrees === 'Yes'">
-            <span *ngIf="!!note.note.interval">({{note.note.interval}})</span>
-          </ng-container>
-        </span>
-      </td>
-    </tr>
-    </tbody>
-  </table>
-</div>
+<app-fretboard [maskedStrings]="maskedStrings" [frets]="frets"></app-fretboard>
 
 <div class="container">
   <form [formGroup]="form">

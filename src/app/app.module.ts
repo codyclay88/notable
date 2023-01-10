@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { InstrumentComponent } from './instrument/instrument.component';
 import {AngularFireModule} from "@angular/fire/compat";
 import {environment} from "../environments/environment";
@@ -14,11 +14,17 @@ import {MatCardModule} from "@angular/material/card";
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
+import { FretboardComponent } from './instrument/fretboard/fretboard.component';
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatChipsModule} from "@angular/material/chips";
+import { ScaleDegreesSelectorComponent } from './scale-degrees-selector/scale-degrees-selector.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    InstrumentComponent
+    InstrumentComponent,
+    FretboardComponent,
+    ScaleDegreesSelectorComponent
   ],
   imports: [
     BrowserModule,
@@ -32,6 +38,9 @@ import {MatIconModule} from "@angular/material/icon";
     MatSidenavModule,
     MatButtonModule,
     MatIconModule,
+    MatCheckboxModule,
+    MatChipsModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
