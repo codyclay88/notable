@@ -18,13 +18,18 @@ import { FretboardComponent } from './instrument/fretboard/fretboard.component';
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatChipsModule} from "@angular/material/chips";
 import { ScaleDegreesSelectorComponent } from './scale-degrees-selector/scale-degrees-selector.component';
+import { EditInstrumentDialogComponent } from './instrument/edit-instrument-dialog/edit-instrument-dialog.component';
+import {MatBottomSheetModule} from "@angular/material/bottom-sheet";
+import {MatDialogModule} from "@angular/material/dialog";
+import {MatGridListModule} from "@angular/material/grid-list";
 
 @NgModule({
   declarations: [
     AppComponent,
     InstrumentComponent,
     FretboardComponent,
-    ScaleDegreesSelectorComponent
+    ScaleDegreesSelectorComponent,
+    EditInstrumentDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -40,7 +45,10 @@ import { ScaleDegreesSelectorComponent } from './scale-degrees-selector/scale-de
     MatIconModule,
     MatCheckboxModule,
     MatChipsModule,
-    FormsModule
+    MatBottomSheetModule,
+    MatDialogModule,
+    FormsModule,
+    MatGridListModule
   ],
   providers: [],
   bootstrap: [AppComponent]

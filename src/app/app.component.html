@@ -28,8 +28,25 @@
   </form>
 </div>
 
+<div style="padding: 1rem; display: flex; align-items: center; justify-content: space-between">
+  <h2>Instruments</h2>
+  <button mat-raised-button color="primary" (click)="addInstrument()">Add New Instrument</button>
+</div>
+
+
 
 <div *ngFor="let instrument of instruments; let i=index">
+  <div style="display: flex; align-items: center; justify-content: start; padding-left: 1rem;">
+    <h3 style="margin-right: 1rem;">{{ instrument.name }}</h3>
+    <div>
+      <button class="action-btn" mat-mini-fab color="primary" (click)="editInstrument(i)">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button class="action-btn" mat-mini-fab color="warn" (click)="deleteInstrument(i)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  </div>
   <app-instrument  [instrument]="instrument"
                    [key]="this.form.get('key')?.value ?? 'C'"
                    [mode]="this.form.get('mode')?.value ?? 'Ionian'"

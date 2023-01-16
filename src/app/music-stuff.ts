@@ -51,6 +51,7 @@ export interface MusicNote {
 }
 
 export interface Instrument {
+  name: string;
   fretCount: number;
   tuning: MusicNote[];
 }

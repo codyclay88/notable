@@ -1,0 +1,40 @@
+<h1 mat-dialog-title>
+  Edit Instrument
+</h1>
+<div mat-dialog-content style="padding-top: 1rem;">
+  <div class="container">
+    <form [formGroup]="form">
+      <mat-form-field appearance="fill">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name">
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Frets</mat-label>
+        <input matInput formControlName="fretCount" [min]="12" [max]="25"  type="number">
+      </mat-form-field>
+
+      <div style="display: flex; justify-content: space-between; align-items: center">
+        <h3>Tuning</h3>
+        <button mat-raised-button color="primary" (click)="addString()">Add String</button>
+      </div>
+
+      <mat-grid-list cols="2" rowHeight="64px" formArrayName="tuning">
+        <mat-grid-tile *ngFor="let note of tuningArray.controls; let i=index">
+          <mat-form-field appearance="fill" style="width: 125px;">
+            <mat-label>String {{ i + 1 }}</mat-label>
+            <mat-select [formControlName]="i">
+              <mat-option [value]="noteIndex" *ngFor="let note of noteCatalog; let noteIndex=index"> {{ note.pitchClass }}{{ note.octave }} </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <button mat-icon-button (click)="removeString(i)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-grid-tile>
+      </mat-grid-list>
+    </form>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button mat-button (click)="onSaveClick()">Save</button>
+</div>

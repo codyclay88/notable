@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {noteCatalog, RenderedNote} from "../../music-stuff";
+import {RenderedNote} from "../../music-stuff";
 import * as Tone from 'tone'
 
 @Component({
@@ -18,7 +18,6 @@ export class FretboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(noteCatalog);
   }
 
 }
