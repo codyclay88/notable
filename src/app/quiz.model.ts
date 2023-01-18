@@ -30,16 +30,16 @@ export interface Quiz {
   summary: QuizSummary;
 }
 
-const firstQuiz: Quiz = {
-  questions: [
-    {
-      questionType: 'MusicTheory',
-      promptType: 'SinglePitchClass',
-      questionText: "What is the 3rd scale degree in the G Major Scale?",
-      answer: 'B',
-    },
-  ]
-}
+// const firstQuiz: Quiz = {
+//   questions: [
+//     {
+//       questionType: 'MusicTheory',
+//       promptType: 'SinglePitchClass',
+//       questionText: "What is the 3rd scale degree in the G Major Scale?",
+//       answer: 'B',
+//     },
+//   ]
+// }
 
 const musicTheoryQuestions: QuizQuestion[] = [
   {
