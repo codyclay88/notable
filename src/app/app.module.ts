@@ -22,6 +22,7 @@ import { EditInstrumentDialogComponent } from './instrument/edit-instrument-dial
 import {MatBottomSheetModule} from "@angular/material/bottom-sheet";
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatGridListModule} from "@angular/material/grid-list";
+import { TunerComponent } from './instrument/tuner/tuner.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import {MatGridListModule} from "@angular/material/grid-list";
     InstrumentComponent,
     FretboardComponent,
     ScaleDegreesSelectorComponent,
-    EditInstrumentDialogComponent
+    EditInstrumentDialogComponent,
+    TunerComponent
   ],
   imports: [
     BrowserModule,
