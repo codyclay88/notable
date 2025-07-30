@@ -1,58 +1,65 @@
-<mat-toolbar>
-  <span>Notable</span>
-</mat-toolbar>
+<div class="layout">
+  <mat-toolbar>
+    <span>Notable</span>
+  </mat-toolbar>
+  <div style="flex-grow: 1;">
+    <div class="body">
+      <form [formGroup]="form" style="padding: 1rem 8px 8px;">
+        <mat-form-field appearance="fill" style="margin-right: 1rem; width: 85px;">
+          <mat-label>Key</mat-label>
+          <mat-select formControlName="key">
+            <mat-option [value]="'NA'"> None </mat-option>
+            <mat-option [value]="pitchClass" *ngFor="let pitchClass of allPitchClasses"> {{ pitchClass }}</mat-option>
+          </mat-select>
+        </mat-form-field>
 
-<div class="body">
-  <form [formGroup]="form" style="padding: 1rem 8px 8px;">
-    <mat-form-field appearance="fill" style="margin-right: 1rem; width: 85px;">
-      <mat-label>Key</mat-label>
-      <mat-select formControlName="key">
-        <mat-option [value]="'NA'"> None </mat-option>
-        <mat-option [value]="pitchClass" *ngFor="let pitchClass of allPitchClasses"> {{ pitchClass }}</mat-option>
-      </mat-select>
-    </mat-form-field>
+        <ng-container *ngIf="form.get('key')?.value !== 'NA'">
+          <mat-form-field appearance="fill" style="width: 150px;">
+            <mat-label>Mode</mat-label>
+            <mat-select formControlName="mode">
+              <mat-option [value]="mode" *ngFor="let mode of allModes"> {{ mode }}</mat-option>
+            </mat-select>
+          </mat-form-field>
 
-    <ng-container *ngIf="form.get('key')?.value !== 'NA'">
-      <mat-form-field appearance="fill" style="width: 150px;">
-        <mat-label>Mode</mat-label>
-        <mat-select formControlName="mode">
-          <mat-option [value]="mode" *ngFor="let mode of allModes"> {{ mode }}</mat-option>
-        </mat-select>
-      </mat-form-field>
+          <app-scale-degrees-selector [key]="this.form.get('key')?.value ?? 'C'"
+                                      [mode]="this.form.get('mode')?.value ?? 'Ionian'"
+                                      (selectionsChanged)="scaleDegreeSelectionsChanged($event)">
+          </app-scale-degrees-selector>
+        </ng-container>
+      </form>
+    </div>
 
-      <app-scale-degrees-selector [key]="this.form.get('key')?.value ?? 'C'"
-                                  [mode]="this.form.get('mode')?.value ?? 'Ionian'"
-                                  (selectionsChanged)="scaleDegreeSelectionsChanged($event)">
-      </app-scale-degrees-selector>
-    </ng-container>
-  </form>
-</div>
+    <div style="padding: 1rem; display: flex; align-items: center; justify-content: space-between">
+      <h2>Instruments</h2>
+      <button mat-raised-button color="primary" (click)="addInstrument()">Add New Instrument</button>
+    </div>
 
-<div style="padding: 1rem; display: flex; align-items: center; justify-content: space-between">
-  <h2>Instruments</h2>
-  <button mat-raised-button color="primary" (click)="addInstrument()">Add New Instrument</button>
-</div>
-
-
-
-<div *ngFor="let instrument of instruments; let i=index">
-  <div style="display: flex; align-items: center; justify-content: start; padding-left: 1rem;">
-    <h3 style="margin-right: 1rem;">{{ instrument.name }}</h3>
-    <div>
-      <button class="action-btn" mat-mini-fab color="primary" (click)="editInstrument(i)">
-        <mat-icon>edit</mat-icon>
-      </button>
-      <button class="action-btn" mat-mini-fab color="warn" (click)="deleteInstrument(i)">
-        <mat-icon>delete</mat-icon>
-      </button>
+    <div *ngFor="let instrument of instruments; let i=index">
+      <div style="display: flex; align-items: center; justify-content: start; padding-left: 1rem;">
+        <h3 style="margin-right: 1rem;">{{ instrument.name }}</h3>
+        <div>
+          <button class="action-btn" mat-mini-fab color="primary" (click)="editInstrument(i)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button class="action-btn" mat-mini-fab color="warn" (click)="deleteInstrument(i)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+      <app-instrument  [instrument]="instrument"
+                       [key]="this.form.get('key')?.value ?? 'C'"
+                       [mode]="this.form.get('mode')?.value ?? 'Ionian'"
+                       [scaleDegrees]="scaleDegrees"
+      ></app-instrument>
     </div>
   </div>
-  <app-instrument  [instrument]="instrument"
-                   [key]="this.form.get('key')?.value ?? 'C'"
-                   [mode]="this.form.get('mode')?.value ?? 'Ionian'"
-                   [scaleDegrees]="scaleDegrees"
-  ></app-instrument>
+
+
+  <footer style="color: #555; padding-top: 2rem; padding-bottom: 1rem; padding-right: 1rem; text-align: end">
+    Made with <span style="color: red;">love</span> by <a href="https://codyclay.com">a Jesus follower</a>
+  </footer>
 </div>
+
 
 
 
